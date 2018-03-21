@@ -37,6 +37,7 @@ del test_set
 train_img = torch.from_numpy(train_set[0].reshape(50000, 1, 28, 28))
 train_label = torch.from_numpy(train_set[1].reshape(50000, 1))
 
+#transfer labels into vectors of length 10
 temp = torch.zeros(50000,10)
 for i in range(50000):
     temp[i,int(train_label[i].numpy())] = 1
@@ -54,9 +55,11 @@ def weights_init(m):
         m.weight.data.normal_(1.0, 0.02)
         m.bias.data.fill_(0)
 
-        
+
+#define generator
 class Generator(nn.Module):
     def __init__(self, nz = 100, ydim = 10, gfc = 1024, gf = 64):
+        
         super(Generator, self).__init__()
         
         
@@ -71,8 +74,8 @@ class Generator(nn.Module):
         self.g_l1 = nn.Linear(self.nz + self.ydim, self.gfc)
         self.g_l2 = nn.Linear(self.gfc + self.ydim, 2 * self.gf * self.s_h4 * self.s_w4)
         
-        self.deconv1 = nn.ConvTranspose2d(2 * self.gf + self.ydim, self.gf, 4, 2, 1, bias=False)
-        self.deconv2 = nn.ConvTranspose2d(self.gf + self.ydim,     1, 4, 2, 3, bias=False)
+        self.deconv1 = nn.ConvTranspose2d(2 * self.gf + self.ydim, 2 * self.gf, 4, 2, 1, bias=False)
+        self.deconv2 = nn.ConvTranspose2d(2 * self.gf + self.ydim,     1, 4, 2, 3, bias=False)
         
         self.g_bn0 = nn.BatchNorm1d(gfc)
         self.g_bn1 = nn.BatchNorm1d(2 * self.gf * self.s_h4 * self.s_w4)
