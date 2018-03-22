@@ -79,7 +79,7 @@ class Generator(nn.Module):
         
         self.g_bn0 = nn.BatchNorm1d(gfc)
         self.g_bn1 = nn.BatchNorm1d(2 * self.gf * self.s_h4 * self.s_w4)
-        self.g_bn2 = nn.BatchNorm2d(self.gf)
+        self.g_bn2 = nn.BatchNorm2d(2 * self.gf)
         
 
     def forward(self, z, y):
